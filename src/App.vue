@@ -1,7 +1,9 @@
 <template>
   <div class="app">
     <tabbar></tabbar>
-    <router-view class="main"></router-view>
+    <section>
+      <router-view class="main"></router-view>
+    </section>
     <!-- 这里是插film组件的 http://localhost:8080/#/film-->
   </div>
 </template>
@@ -59,6 +61,12 @@ li{list-style:none}
 img{border:0;vertical-align:middle}
 table{border-collapse:collapse;border-spacing:0}
 p{word-wrap:break-word}
+html,body{
+  height: 100%;
+}
+section{
+  margin-bottom: 50px;
+}
 // .main{height: 480px;box-sizing:border-box;overflow: auto;}
 // .app{display: flex;flex-direction: column;height: 100%;box-sizing:border-box;}
 // body{display: flex;flex-direction: column;height: 100%;box-sizing:border-box;}

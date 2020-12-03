@@ -4,7 +4,7 @@
     <film-swiper v-if="imglist.length" :myoptions="zidingyi">
       <div class="swiper-slide" v-for="(data,index) in imglist" :key="index">
         <div :style=" {backgroundImage:'url('+data.poster+')'} "
-          style="height:150px"></div>
+          style="height:200px"></div>
       </div>
       <template #pagination>
         <div class="swiper-pagination"></div>
@@ -60,6 +60,6 @@ export default {
 <style lang="scss" scoped>
   .swiper-container {
       width: 100%;
-      height: 150px;
+      height: 200px;
     }
 </style>

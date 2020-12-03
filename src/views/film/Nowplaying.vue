@@ -2,7 +2,8 @@
     <main class="nowplaying">
         <ul >
             <li v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
-              <a :href=" '#/film/'+ data.filmId ">
+              <!-- <a :href=" '#/film/'+ data.filmId "> -->
+              <a href="javascript:;">
                 <div class="lazy-img">
                   <img :src="data.poster" alt="">
                 </div>
@@ -26,15 +27,17 @@
                     <span class="label">{{data.nation}} | {{data.runtime}} 分钟</span>
                   </div>
                 </div>
-                <div class="nowPlayingFilm-buy">预购</div>
+                <div class="nowPlayingFilm-buy">购票</div>
               </a>
             </li>
         </ul>
     </main>
 </template>
 <script>
-import axios from 'axios'
+// import axios from 'axios'  原始写法，下面用封装过的http写法重写了
 import Vue from 'vue'
+import http from '@/util/http' // 这个函数是我们封装了axios之后的
+
 Vue.filter('actorFilter', (actors) => {
   if (actors === undefined) {
     return '暂无主演'
@@ -48,16 +51,15 @@ export default {
     }
   },
   methods: {
-    handleClick (id) {
-      console.log(id)
-      this.$router.push(`/detail/${id}`)
+    handleClick (filmId) {
+      console.log(filmId)
+      this.$router.push(`/detail/${filmId}`)
     }
   },
   mounted () {
-    axios({
-      url: 'https://m.maizuo.com/gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=7274781',
+    http({
+      url: 'gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=7274781',
       headers: {
-        'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1606882441751426003271681","bc":"310100"}',
         'X-Host': 'mall.film-ticket.film.list'
       }
     }).then(res => {
@@ -157,7 +159,7 @@ export default {
               line-height: 25px;
               height: 25px;
               width: 50px;
-              color: #ffb232;
+              color: #ff5f16;
               font-size: 13px;
               text-align: center;
               border-radius: 2px;
@@ -169,7 +171,7 @@ export default {
                   -ms-transform: scale(.5);
                   transform: scale(.5);
                   position: absolute;
-                  border: 1px solid #ffb232;
+                  border: 1px solid #ff5f16;
                   top: -50%;
                   right: -50%;
                   bottom: -50%;

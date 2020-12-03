@@ -19,8 +19,8 @@ export default {
     ul{
         display:flex;
         width: 100%;
-        height:40px;
-        line-height: 40px;
+        height:50px;
+        line-height: 50px;
         text-align:center;
         li{
             flex:1;
