@@ -72,7 +72,7 @@ router.beforeEach((to, from, next) => {
   // }
   const auth = ['/center', '/order', '/money', '/card']
   if (auth.includes(to.fullPath)) {
-    console.log('验证token')
+    console.log('验证token,')
     if (!localStorage.getItem('token')) {
       next('/login')
     } else {
