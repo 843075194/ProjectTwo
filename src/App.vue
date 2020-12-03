@@ -21,18 +21,20 @@ export default {
     // ...
 
     // 1- 魅力慧网站，后端配置好了跨域，可以直接拿
-    // axios.get('http://www.mei.com/appapi/home/mktBannerApp/v3?silo_id=2013000100000000008&platform_code=PLATEFORM_H5').then((res) => {
+    // axios.get('http://www.mei.com/appapi/home/mktBannerApp/v3?silo_id=2013000100000000008&platform_code=PLATEFORM_H5')
+    // .then((res) => {
     //   console.log(res.data)
     // }).catch((err) => {
     //   console.log(err)
     // })
 
     // 2- 猫眼网站m.maoyan.com跨域的 设置vue.config.fs
-    // axios.get('/ajax/movieOnInfoList?token=&optimus_uuid=0D6BB550345111EBA7F4B7F5E54E4A3DEEA8307932F54804A68BDB51BB467210&optimus_risk_level=71&optimus_code=10').then((res) => {
-    //   console.log(res.data)
-    // }).catch((err) => {
-    //   console.log(err)
-    // })
+    // axios.get('/ajax/movieOnInfoList?token=&optimus_uuid=0D6BB550345111EBA7F4B7F5E54E4A3DEEA8307932F54804A68BDB51BB467210&optimus_risk_level=71&optimus_code=10')
+    //   .then((res) => {
+    //     console.log(res.data)
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   })
 
     // 3- 卖座网站  需要设置请求头headers
     axios({
@@ -42,7 +44,7 @@ export default {
         'X-Host': 'mall.film-ticket.film.list'
       }
     }).then(res => {
-      // console.log(res.data)
+      console.log(res.data)
     })
   }
 }

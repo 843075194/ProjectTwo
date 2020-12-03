@@ -12,6 +12,7 @@
 // import Vue from 'vue'
 import Swiper from 'swiper/bundle'
 import 'swiper/swiper-bundle.min.css'
+
 export default {
   props: ['myoptions'],
   mounted () {

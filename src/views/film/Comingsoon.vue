@@ -2,7 +2,8 @@
     <main class="nowplaying">
         <ul >
             <li v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
-              <div class="lazy-img">
+              <a :href=" '#/film/'+ data.filmId ">
+                <div class="lazy-img">
                 <img :src="data.poster" alt="">
               </div>
               <div class="nowPlayingFilm-info">
@@ -21,6 +22,8 @@
                   <span class="label">{{data.nation}} | {{data.runtime}} 分钟</span>
                 </div>
               </div>
+              <div class="comingSoonFilm-buy">预购</div>
+              </a>
             </li>
         </ul>
     </main>
@@ -28,6 +31,7 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
+
 Vue.filter('actorFilter', (actors) => {
   if (actors === undefined) {
     return '暂无主演'
@@ -77,18 +81,30 @@ export default {
         height: 94px;
         padding: 15px 15px 15px 0;
         border-bottom: 1px solid #ededed;
-        .lazy-img{
-          width: 66px;
-          height: 94px;
-          position: relative;
-          float: left;
-          display: block;
-          overflow: hidden;
-          img{
-              width: 100%;
-              position: absolute;
-          }
-      }
+        a{
+          display: -webkit-box;
+              display: -ms-flexbox;
+              display: flex;
+              -webkit-box-pack: start;
+              -ms-flex-pack: start;
+              justify-content: flex-start;
+              -webkit-box-align: center;
+              -ms-flex-align: center;
+              align-items: center;
+          .lazy-img{
+                    width: 66px;
+                    height: 94px;
+                    position: relative;
+                    float: left;
+                    display: block;
+                    overflow: hidden;
+                    img{
+                        width: 100%;
+                        position: absolute;
+                    }
+                }
+        }
+
       .nowPlayingFilm-info{
         float: left;
         width: calc(100% - 116px);
@@ -106,6 +122,7 @@ export default {
           color: #797d82;
         }
         .nowPlayingFilm-name{
+          margin-bottom: 10px;
             .item{
               font-size: 9px;
               color: #fff;
@@ -129,8 +146,32 @@ export default {
             }
         }
       }
-    }
+      .comingSoonFilm-buy{
+          float: right;
+          line-height: 25px;
+          height: 25px;
+          width: 50px;
+          color: #ffb232;
+          font-size: 13px;
+          text-align: center;
+          border-radius: 2px;
+          position: relative;
+        }
+      }
   }
 }
+      .comingSoonFilm-buy::after {
+              content: " ";
+              -webkit-transform: scale(.5);
+              -ms-transform: scale(.5);
+              transform: scale(.5);
+              position: absolute;
+              border: 1px solid #ffb232;
+              top: -50%;
+              right: -50%;
+              bottom: -50%;
+              left: -50%;
+              border-radius: 4px;
+            }
 
 </style>
