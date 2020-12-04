@@ -62,7 +62,6 @@
             }
         }
     }
-
     .kerwinactive{
         color:red;
     }

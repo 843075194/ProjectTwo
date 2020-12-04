@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     handleClick (filmId) {
-      console.log(filmId)
+      // console.log(filmId)
       this.$router.push(`/detail/${filmId}`)
     }
   },

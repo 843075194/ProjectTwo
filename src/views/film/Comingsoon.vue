@@ -2,7 +2,8 @@
     <main class="nowplaying">
         <ul >
             <li v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
-              <a :href=" '#/film/'+ data.filmId ">
+              <!-- <a :href=" '#/film/'+ data.filmId "> -->
+              <a href="javascript:;">
                 <div class="lazy-img">
                 <img :src="data.poster" alt="">
               </div>

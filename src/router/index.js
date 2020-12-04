@@ -62,7 +62,7 @@ const router = new VueRouter({
 })
 // 全局路由守卫  ==> 全局路由拦截
 router.beforeEach((to, from, next) => {
-  console.log(to.fullPath)
+  console.log(to.fullPath)// /detail/5231 这样的
   // to="/center"  这个是Tabbar中定义的li中的to，指代的是路由的去向
   // 这个地方的话to.fullPath 也就是
   // if (to.fullPath === '/center') {

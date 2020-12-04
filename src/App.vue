@@ -63,6 +63,7 @@ table{border-collapse:collapse;border-spacing:0}
 p{word-wrap:break-word}
 html,body{
   height: 100%;
+  background-color: #f4f4f4;
 }
 section{
   margin-bottom: 50px;

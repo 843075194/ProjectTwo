@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //2.程序有3行控制台输出，试依次写出。
+        // console.log(a);  		//undifined
+        // var a = 8;   
+        // function fn(){
+        //     console.log(a); 	//8
+        //     a = 15;	
+        // }
+        // fn();
+        // console.log(a);  		//15
+        //3.程序有1行控制台输出，试写出。
+        // var a = true; 
+        // function fn(){
+        // if(!a){  
+        //     var a = 10;  
+        // }
+        // console.log(a); 		//true
+        // }
+        // fn();
+        // 4.程序有1行控制台输出，试写出。
+        // var a = 8;
+        // function fn() {
+        //     if (!a) {
+        //         var a = 15;
+        //     }
+        //     console.log(a); 		//8
+        // }
+        // fn();
+        //7.程序有3行控制台输出，试依次写出。
+        // console.log(foo);
+        // var foo = "a";
+        // (function (foo) {
+        //     console.log(foo);		//a
+        //     var foo = foo || "b"; 	//
+        //     console.log(foo);   		//a
+        // })(foo);
+        // console.log(foo);		//a    		
+        //8.程序有4次弹窗，试依次写出。
+        // var a = 9;
+        // function fn() {
+        //     a = 0;
+        //     return function (b) {
+        //         return b + a++;
+        //     }
+        // }
+        // var f = fn();
+        // var m = f(5);
+        // alert(m);
+        // var n = fn()(5);
+        // alert(n);
+        // var x = f(5);
+        // alert(x);
+        // alert(a);
+
+        //9.程序有1行控制台输出，试写出。
+        // var a = 3;
+        // var b = a = 4;
+        // console.log(a === b);  		//true
+        //13.程序有1行控制台输出，试写出。
+        // var obj = {};
+        // var fun = function () { };
+        // //alert(fun.__proto__.__proto__ == obj.__proto__); 
+        // console.log(fun.__proto__);
+        // console.log(obj);
+        // 14.程序有5行控制台输出，试写出。
+        // console.log(Object instanceof Object);
+        // console.log(Function instanceof Function);
+        // console.log(Number instanceof Number);
+        // console.log(String instanceof String);
+        // console.log(Function instanceof Object);   
+        // console.log(Function);
+        // console.log(Object);
+
+        // 15.下面两条语句结果是true还是false？
+        // (new Array()).constructor.constructor.constructor == (new Array()).constructor  
+        // (new Array()).constructor.constructor.constructor == Array.constructor 
+        // console.log((new Array()).constructor.constructor.constructor);
+
+
+        // 16.程序有1行控制台输出，试写出。
+        // function Fun() {
+        //     return 3;
+        // }
+        // var m = new Fun();
+        // console.log(m);
+        // console.log(m == 3);
+
+        // 17.程序有2行控制台输出，试写出。
+        // function A() {
+        //     this.m = 1;
+        //     //B.m = 1;
+        // }
+        // function B() {
+        //     this.m = 2;
+        //     //A.m = 2;
+        // }
+        // A.call(B);
+        // B.call(A);
+        // var a = new A(); //a.m = 1
+        // console.log(a);
+        // var b = new B(); // b.m = 2
+        // console.log(b);
+        // console.log(a.m == B.m);
+        // console.log(b.m == A.m); 
+
+        // 18.程序有1行控制台输出，试写出。
+        // var obj = {
+        //     "a": function () {
+        //         return this.b;
+        //     },
+        //     "b": function () {
+        //         console.log(this);
+        //         return this.c;
+        //     },
+        //     "c": 1
+        // }
+        // var result = obj.a()();
+        // console.log(obj.a());
+        // console.log(result); 
+        // var m = obj.a(); //==>return obj.b
+        // var result = m() //==>调用了b函数，所以返回return this.c 此时this是window
+
+        // 20.程序有4行控制台输出，试依次写出。
+        // function Fun(para1, para2, para3) {
+        //     var obj = {};
+        //     obj.para1 = para1;
+        //     obj.para2 = para2;
+        //     obj.para3 = para3;
+        //     return obj;
+        // }
+        // Fun.prototype.para4 = 4;
+        // var o = new Fun(1, 2, 3);
+
+        // console.log(o.para1);
+        // console.log(o.para4);
+        // console.log(o instanceof Fun);
+        // console.log(o);
+        // console.log(Fun.prototype);
+        // console.log(o.__proto__ == Fun.prototype);
+
+        // 21.程序有1行控制台输出，试写出。
+        // function getLength() {
+        //     return this.length;
+        // }
+        // function foo() {
+        //     this.length = 1;
+        //     console.log(this);
+        //     return (function () {
+        //         var length = 2;
+        //         return {
+        //             length: function (a, b, c) {
+        //                 return this.arr.length
+        //             },
+        //             arr: [1, 2, 3, 4],
+        //             info: function () {
+        //                 console.log(this);//这个函数 调用他的函数
+        //                 return getLength.call(this.length);
+        //             }
+        //         }
+        //     })();
+        // }
+        // var a = foo()
+        // var l = a.info();
+        // console.log(l);
+
+        // var a=  (function () {
+        //         var length = 2;
+        //         return {
+        //             length: function (a, b, c) {
+        //                 return this.arr.length
+        //             },
+        //             arr: [1, 2, 3, 4],
+        //             info: function () {
+        //                 return getLength.call(this.length);
+        //             }
+        //         }
+        //     })()
+        //     //==>
+        //     var a =  {
+        //             length: function (a, b, c) {
+        //                 return this.arr.length
+        //             },
+        //             arr: [1, 2, 3, 4],
+        //             info: function () {
+        //                 return getLength.call(this.length);
+        //             }
+        //         }
+        //         a.info() //==> 
+        //             function () {
+        //                 return getLength.call(this.length);
+        //             }
+
+        // 22.程序有4次弹窗，试依次写出。
+        // function fun(f, a, b, c) {
+        //     arguments[0](5, 6);
+        // }
+        // function fun2(p, q, r, s, t) {
+        //     console.log(this);//arguments
+        //     alert(this.length);//6
+        //     alert(this.callee.length);
+        //     alert(arguments.length);
+        //     alert(arguments.callee.length);
+        //     //arguments.callee回去看看
+        // }
+        // fun(fun2, 8, 9, 10, 11, 12);
+
+        // 23.程序有3次弹窗，试依次写出。
+        // var Foo = (function () {
+        //     var instance = null;
+        //     return function () {
+        //         if (instance == null) {
+        //             return instance = new Bar();
+        //         }
+        //         return instance;
+        //     }
+        // })();
+        // var Bar = function () { }
+        // var o1 = new Foo(); //instance = new Bar();
+        // // ==> var Bar = function () { }
+        // console.log(o1);
+        // var o2 = new Foo(); //instance ==> 也就是第一次new Bar()的值
+        // console.log(o2);
+        // alert(o1 === o2);//true
+        // alert(o1 instanceof Foo);//false
+        // alert(o2 instanceof Bar);//true
+
+        // function () {
+        //         if (instance == null) {
+        //             return instance = new Bar();
+        //         }
+        //         return instance;
+        //     }
+
+        // 25.程序有5行输出，试依次写出。
+        var number = 2;
+        var obj = {
+            number: 4,
+            fn1: (function () {
+                this.number *= 2;
+                number = number * 2;
+                var number = 3;
+                return function () {
+                    this.number *= 2;
+                    number *= 3;
+                    alert(number);
+                }
+            })(),
+            fn2: function () {
+                this.number *= 2;
+            }
+        };
+        var fn1 = obj.fn1;
+        alert(number);
+        fn1();
+        obj.fn1();
+        obj.fn2();
+        alert(window.number);
+        alert(obj.number);
+    </script>
+</body>
+
+</html>
