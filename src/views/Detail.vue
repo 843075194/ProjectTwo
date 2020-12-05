@@ -1,7 +1,11 @@
 <template>
   <!-- 因为页面在最开始的时候会加载一次，这个时候我们的filminfo没有值，所以会报错 -->
   <!-- 所以我们需要在一开始的时候做个判断，如果是假就不加载,{},[]都是true，所以用null -->
-    <div v-if="filminfo">
+    <div v-if="filminfo" >
+      <!-- 这个组件是顶部导航栏 -->
+      <div v-if="!isPhotos">
+        <detail-header v-top :title="filminfo.name"  @backEvent='goback'></detail-header>
+
         <div :style="{backgroundImage:'url('+filminfo.poster+')'}"
         style="height:300px;background-size:cover;background-position:">
         </div>
@@ -47,7 +51,8 @@
         <div class="photos">
             <div class="photos-title-bar">
               <span class="photos-title-text">剧照</span>
-              <span class="photos-to-all">全部(5)</span>
+              <!-- isPhotos在这个地方变成了true，所以上面的div执行if语句被隐藏，下面的div执行v-else语句显示 -->
+              <span class="photos-to-all" @click='isPhotos=true'>全部({{filminfo.photos.length}})</span>
             </div>
             <detail-swiper :perslide="2" :spacebetween='20' class="photos-detail-swiper" swiperclass='photos-detail-swiper'>
               <div class="swiper-slide swiper-photos" v-for="(data,index) in filminfo.photos" :key="index">
@@ -57,6 +62,18 @@
               </div>
             </detail-swiper>
         </div>
+      </div>
+      <div v-else>
+        <!-- 这个地方的事件是在Navbar组件点击回退按钮时执行的，上一步isPhotos是true，此时变成了false -->
+        <NavBar @navbackEvent='navtoggle' :hide='false'>
+          <h4>剧照({{filminfo.photos.length}})</h4>
+          <ul class='photos-list'>
+            <li class='photos-list-item' v-for="(data,index) in filminfo.photos" :key="index">
+              <img :src="data" alt=""/>
+            </li>
+          </ul>
+      </NavBar>
+      </div>
     </div>
 </template>
 
@@ -68,6 +85,8 @@ import http from '@/util/http'
 import Vue from 'vue'
 import moment from 'moment'
 import detailSwiper from './detail/DetailSwiper'
+import detailHeader from './detail/DetailHeader'
+import NavBar from '../components/Navbar'
 
 Vue.filter('dateFilter', (date) => {
   return moment(date * 1000).format('YYYY-MM-DD')
@@ -78,22 +97,58 @@ Vue.filter('gradeFilter', (grade) => {
   }
   return grade
 })
+
+Vue.directive('top', {
+  inserted (el) {
+    console.log(el)
+    // el.style.display = 'none'
+    el.className = 'film-header'
+    window.onscroll = () => {
+      var bodyTop = document.body.scrollTop || document.documentElement.scrollTop
+      if (bodyTop > 50) {
+        // el.style.display = 'block'
+        el.className = 'film-header show-film-header'
+      } else {
+        // el.style.display = 'none'
+        el.className = 'film-header'
+      }
+    }
+  },
+  unbind () {
+    // window.onscroll的这个事件需要销毁
+    window.onscroll = null
+  }
+})
 export default {
   data () {
     return {
       filminfo: null,
       isTrue: 'true',
-      tubiao: true
+      tubiao: true,
+      isPhotos: false
     }
   },
   components: {
-    detailSwiper
+    detailSwiper,
+    detailHeader,
+    NavBar
   },
   methods: {
     toggle: function () {
       this.isTrue = !this.isTrue
       this.tubiao = !this.tubiao
+    },
+    goback () {
+      this.$router.back()
+    },
+    navtoggle (data) {
+      console.log(data) // 我是子组件传过来的
+      this.isPhotos = !this.isPhotos
     }
+    // scroll () {
+    //   var bodyTop = document.body.scrollTop || document.documentElement.scrollTop
+    //   this.navBarShow = bodyTop >= 50
+    // }
   },
   mounted () {
     // console.log('利用获取的id,ajax请求后端接口' + location.hash)
@@ -294,7 +349,7 @@ export default {
     }
   }
   .lazy-img-wrapphotos{
-      width: 150px;
+      width: 156px;
       height: 100px;
       background: rgb(249, 249, 249);
       opacity: 1;
@@ -338,4 +393,39 @@ export default {
     .photos{
       margin-bottom: 60px;
     }
+    .film-header{
+      position: fixed;
+      background-color: hsla(0,0%,100%,0);
+      color: transparent;
+      -webkit-transition: all .3s ease;
+      -o-transition: all .3s ease;
+      transition: all .3s ease;
+      width: 100vw;
+      height: 44px;
+      z-index: 1;
+      // display: block!important;
+    }
+    .show-film-header{
+      -webkit-transition: all .3s ease;
+      -o-transition: all .3s ease;
+      transition: all .3s ease;
+      background-color: #fff;
+      color: #191a1b;
+      z-index: 20;
+    }
+.photos-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    .photos-list-item {
+      width: 110px;
+      height:  110px;
+      padding: 5px;
+      padding-bottom: 2px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 </style>
