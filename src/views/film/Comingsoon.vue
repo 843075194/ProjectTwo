@@ -34,7 +34,7 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
-import { List, Cell } from 'vant'
+import { List, Cell, Toast } from 'vant'
 Vue.use(List).use(Cell) // 链式引入
 
 Vue.filter('actorFilter', (actors) => {
@@ -80,6 +80,14 @@ export default {
     }
   },
   mounted () {
+    Toast.loading({
+      message: '变可爱ing...',
+      forbidClick: true,
+      loadingType: 'spinner',
+      overlay: false,
+      closeOnClickOverlay: true,
+      duration: 0
+    })
     axios({
       url: 'https://m.maizuo.com/gateway?cityId=310100&pageNum=1&pageSize=10&type=2&k=177673',
       headers: {
@@ -90,6 +98,9 @@ export default {
       console.log(res.data.data.films)
       this.datalist = res.data.data.films
       this.total = res.data.data.total
+
+      // 清除弹出提示框
+      Toast.clear()
     })
   }
 }

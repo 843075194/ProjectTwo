@@ -9,10 +9,10 @@
       <template #pagination>
         <div class="swiper-pagination"></div>
       </template>
-      <template #button>
+      <!-- <template #button>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
-      </template>
+      </template> -->
     </film-swiper>
 
     <film-header style="position:sticky;top:0px;background:white;z-index:100"></film-header>

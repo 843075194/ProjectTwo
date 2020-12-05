@@ -56,7 +56,7 @@
             </div>
             <detail-swiper :perslide="2" :spacebetween='20' class="photos-detail-swiper" swiperclass='photos-detail-swiper'>
               <div class="swiper-slide swiper-photos" v-for="(data,index) in filminfo.photos" :key="index">
-                    <div class="lazy-img-wrapphotos">
+                    <div class="lazy-img-wrapphotos" @click = 'handlePreview(index)'>
                       <img :src="data" alt=""/>
                     </div>
               </div>
@@ -87,6 +87,7 @@ import moment from 'moment'
 import detailSwiper from './detail/DetailSwiper'
 import detailHeader from './detail/DetailHeader'
 import NavBar from '../components/Navbar'
+import { ImagePreview } from 'vant'
 
 Vue.filter('dateFilter', (date) => {
   return moment(date * 1000).format('YYYY-MM-DD')
@@ -144,6 +145,14 @@ export default {
     navtoggle (data) {
       console.log(data) // 我是子组件传过来的
       this.isPhotos = !this.isPhotos
+    },
+    handlePreview (index) {
+      ImagePreview({
+        images: this.filminfo.photos,
+        startPosition: index,
+        loop: false,
+        closeable: true
+      })
     }
     // scroll () {
     //   var bodyTop = document.body.scrollTop || document.documentElement.scrollTop
@@ -151,6 +160,15 @@ export default {
     // }
   },
   mounted () {
+    // 现在统一加到http.js里了
+    // Toast.loading({
+    //   message: '变可爱ing...',
+    //   forbidClick: true,
+    //   loadingType: 'spinner',
+    //   overlay: false,
+    //   closeOnClickOverlay: true,
+    //   duration: 0
+    // })
     // console.log('利用获取的id,ajax请求后端接口' + location.hash)
     // 利用获取的id,ajax请求后端接口#/detail/333
     // 这个地方拿到的route是当前的路由对象，是小对象
@@ -177,6 +195,9 @@ export default {
     }).then(res => {
       console.log(res.data.data.film)
       this.filminfo = res.data.data.film
+
+      // 清除弹出提示框   现在统一加到http.js里了
+      // Toast.clear()
     })
   }
 }
