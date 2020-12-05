@@ -43,12 +43,14 @@ const routes = [
   {
     path: '/center',
     // component: Center
-    component: () => import('../views/Center.vue')
+    // component: () => import('../views/Center.vue')
+    component: () => import(/* webpackChunkName: "kerwingroup" */ '../views/Center.vue')
   },
   {
     path: '/login',
     // component: Login
-    component: () => import('../views/Login.vue')
+    // component: () => import('../views/Login.vue')
+    component: () => import(/* webpackChunkName: "kerwingroup" */ '../views/Login.vue')
   },
   {
     path: '*', // 通配符

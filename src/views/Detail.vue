@@ -428,4 +428,9 @@ export default {
       }
     }
   }
+  div{
+    -webkit-transition: all .3s ease;
+      -o-transition: all .3s ease;
+      transition: all .3s ease;
+  }
 </style>

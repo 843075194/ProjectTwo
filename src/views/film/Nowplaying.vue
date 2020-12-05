@@ -1,17 +1,15 @@
 <template>
     <main class="nowplaying">
-        <ul >
-            <li v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
+       <van-list v-model="loading" :finished="finished"
+          finished-text="总之就是非常可爱" @load="onLoad"
+          :immediate-check="false" :offset="200" >
+             <van-cell v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
               <!-- <a :href=" '#/film/'+ data.filmId "> -->
               <a href="javascript:;">
                 <div class="lazy-img">
                   <img :src="data.poster" alt="">
                 </div>
                 <div class="nowPlayingFilm-info">
-                  <!-- <h3>{{data.name}}</h3>
-                  <p>主演:{{data.actors | actorFilter}}</p> -->
-                  <!-- <h3>{{data.name}}</h3>
-                  <span>{{data.actors | actorFilter}}</span> -->
                   <div class="nowPlayingFilm-name info-col">
                     <span class="name">{{data.name}}</span>
                     <span class="item">{{data.item.name}}</span>
@@ -29,14 +27,16 @@
                 </div>
                 <div class="nowPlayingFilm-buy">购票</div>
               </a>
-            </li>
-        </ul>
+             </van-cell>
+        </van-list>
     </main>
 </template>
 <script>
 // import axios from 'axios'  原始写法，下面用封装过的http写法重写了
 import Vue from 'vue'
 import http from '@/util/http' // 这个函数是我们封装了axios之后的
+import { List, Cell } from 'vant'
+Vue.use(List).use(Cell) // 链式引入
 
 Vue.filter('actorFilter', (actors) => {
   if (actors === undefined) {
@@ -47,13 +47,36 @@ Vue.filter('actorFilter', (actors) => {
 export default {
   data () {
     return {
-      datalist: []
+      datalist: [],
+      loading: false,
+      finished: false,
+      current: 1,
+      total: 0 // 总数据长度
     }
   },
   methods: {
     handleClick (filmId) {
       // console.log(filmId)
       this.$router.push(`/detail/${filmId}`)
+    },
+    onLoad () {
+      console.log('到底啦')
+      this.current++ // 表示每次滑到底部后就加载下一页的数据
+      http({
+        url: `gateway?cityId=310100&pageNum=${this.current}&pageSize=10&type=1&k=7274781`,
+        headers: {
+          'X-Host': 'mall.film-ticket.film.list'
+        }
+      }).then(res => {
+      // console.log(res.data.data.films)
+        this.datalist = [...this.datalist, ...res.data.data.films]
+
+        this.loading = false
+
+        if (this.datalist.length >= this.total) {
+          this.finished = true
+        }
+      })
     }
   },
   mounted () {
@@ -65,6 +88,7 @@ export default {
     }).then(res => {
       // console.log(res.data.data.films)
       this.datalist = res.data.data.films
+      this.total = res.data.data.total
     })
   }
 }
@@ -75,16 +99,15 @@ export default {
   // flex:1;
   // overflow: auto;
   // 加上这句是让内容只出现在页面并且有滚动效果
-  ul{
+  .van-list{
     list-style: none;
       padding: 0;
-      margin-left: 15px;
       margin-bottom: 0;
       margin-top: 0;
-      li{
+      .van-cell{
         // width: 100%;
-        height: 94px;
-        padding: 15px 15px 15px 0;
+        height: 142px;
+        padding: 15px ;
         border-bottom: 1px solid #ededed;
         a{
             display: -webkit-box;
@@ -97,12 +120,11 @@ export default {
               -ms-flex-align: center;
               align-items: center;
         .lazy-img{
-                  width: 66px;
-                  height: 94px;
+                  width: 93px;
+                  height: 105px;
                   position: relative;
                   float: left;
                   display: block;
-                  overflow: hidden;
                   img{
                       width: 100%;
                       position: absolute;
@@ -112,7 +134,7 @@ export default {
 
       .nowPlayingFilm-info{
         float: left;
-        width: calc(100% - 116px);
+        width: calc(100% - 170px);
         padding: 0 10px;
         .info-col{
           overflow: hidden;
@@ -127,7 +149,7 @@ export default {
           color: #797d82;
         }
         .nowPlayingFilm-name{
-          margin-bottom: 10px;
+          // margin-bottom: 10px;
             .item{
               font-size: 9px;
               color: #fff;

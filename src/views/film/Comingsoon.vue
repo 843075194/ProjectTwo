@@ -1,7 +1,9 @@
 <template>
-    <main class="nowplaying">
-        <ul >
-            <li v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
+    <main class="comingsoon">
+        <van-list v-model="loading" :finished="finished"
+          finished-text="总之就是非常可爱" @load="onLoad"
+          :immediate-check="false" :offset="200" >
+            <van-cell v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
               <!-- <a :href=" '#/film/'+ data.filmId "> -->
               <a href="javascript:;">
                 <div class="lazy-img">
@@ -25,13 +27,15 @@
               </div>
               <div class="comingSoonFilm-buy">预购</div>
               </a>
-            </li>
-        </ul>
+            </van-cell>
+        </van-list>
     </main>
 </template>
 <script>
 import axios from 'axios'
 import Vue from 'vue'
+import { List, Cell } from 'vant'
+Vue.use(List).use(Cell) // 链式引入
 
 Vue.filter('actorFilter', (actors) => {
   if (actors === undefined) {
@@ -42,13 +46,37 @@ Vue.filter('actorFilter', (actors) => {
 export default {
   data () {
     return {
-      datalist: []
+      datalist: [],
+      loading: false,
+      finished: false,
+      current: 1,
+      total: 0 // 总数据长度
     }
   },
   methods: {
     handleClick (id) {
       console.log(id)
       this.$router.push(`/detail/${id}`)
+    },
+    onLoad () {
+      console.log('到底啦')
+      this.current++ // 表示每次滑到底部后就加载下一页的数据
+      axios({
+        url: `https://m.maizuo.com/gateway?cityId=310100&pageNum=${this.current}&pageSize=10&type=2&k=177673`,
+        headers: {
+          'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1606882441751426003271681","bc":"310100"}',
+          'X-Host': 'mall.film-ticket.film.list'
+        }
+      }).then(res => {
+        console.log(res.data.data.films)
+        this.datalist = [...this.datalist, ...res.data.data.films]
+
+        this.loading = false
+
+        if (this.datalist.length >= this.total) {
+          this.finished = true
+        }
+      })
     }
   },
   mounted () {
@@ -61,26 +89,26 @@ export default {
     }).then(res => {
       console.log(res.data.data.films)
       this.datalist = res.data.data.films
+      this.total = res.data.data.total
     })
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.nowplaying{
+.comingsoon{
   // flex:1;
   // overflow: auto;
   // 加上这句是让内容只出现在页面并且有滚动效果
-  ul{
+  .van-list{
     list-style: none;
       padding: 0;
-      margin-left: 15px;
       margin-bottom: 0;
       margin-top: 0;
-      li{
+      .van-cell{
         // width: 100%;
-        height: 94px;
-        padding: 15px 15px 15px 0;
+        height: 142px;
+        padding: 15px ;
         border-bottom: 1px solid #ededed;
         a{
           display: -webkit-box;
@@ -92,23 +120,22 @@ export default {
               -webkit-box-align: center;
               -ms-flex-align: center;
               align-items: center;
-          .lazy-img{
-                    width: 66px;
-                    height: 94px;
-                    position: relative;
-                    float: left;
-                    display: block;
-                    overflow: hidden;
-                    img{
-                        width: 100%;
-                        position: absolute;
-                    }
-                }
+        .lazy-img{
+                  width: 93px;
+                  height: 105px;
+                  position: relative;
+                  float: left;
+                  display: block;
+                  img{
+                      width: 100%;
+                      position: absolute;
+                  }
+              }
         }
 
       .nowPlayingFilm-info{
         float: left;
-        width: calc(100% - 116px);
+        width: calc(100% - 170px);
         padding: 0 10px;
         .info-col{
           overflow: hidden;
@@ -123,7 +150,7 @@ export default {
           color: #797d82;
         }
         .nowPlayingFilm-name{
-          margin-bottom: 10px;
+          // margin-bottom: 10px;
             .item{
               font-size: 9px;
               color: #fff;

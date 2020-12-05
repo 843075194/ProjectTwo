@@ -55,7 +55,7 @@ export default {
 <style lang="scss">
 body,ol,ul,h1,h2,h3,h4,h5,h6,p,th,td,dl,dd,form,fieldset,legend,input,textarea,select{margin:0;padding:0;box-sizing:border-box;}
 a{color:#172c45;text-decoration:none}
-a:hover{color:#cd0200;text-decoration:none}
+a:hover{color:orange;text-decoration:none}
 em{font-style:normal}
 li{list-style:none}
 img{border:0;vertical-align:middle}
