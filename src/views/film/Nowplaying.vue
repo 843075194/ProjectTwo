@@ -1,8 +1,11 @@
 <template>
     <main class="nowplaying">
+      <!-- 用组件van-list来改装的列表数据 -->
+      <!-- ul节点变成了van-list -->
        <van-list v-model="loading" :finished="finished"
           finished-text="总之就是非常可爱" @load="onLoad"
           :immediate-check="false" :offset="200" >
+          <!-- li节点变成了van-cell -->
              <van-cell v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
               <!-- <a :href=" '#/film/'+ data.filmId "> -->
               <a href="javascript:;">
@@ -61,19 +64,24 @@ export default {
     },
     onLoad () {
       console.log('到底啦')
+
       this.current++ // 表示每次滑到底部后就加载下一页的数据
+
       http({
-        url: `gateway?cityId=310100&pageNum=${this.current}&pageSize=10&type=1&k=7274781`,
+        url: `gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=7274781`,
         headers: {
           'X-Host': 'mall.film-ticket.film.list'
         }
       }).then(res => {
       // console.log(res.data.data.films)
+
         this.datalist = [...this.datalist, ...res.data.data.films]
-
+        // 加载状态结束
         this.loading = false
-
-        if (this.datalist.length >= this.total) {
+        // 这个地方来判断是否还需要继续加载
+        // 只要在别的页面滚动了，呢么切换回来之后就会触发一次onload事件，呢么此时就执行这个if语句，finished=true
+        // 显然如果一开始就完成是不合理的，所以我们需要加一个判断条件
+        if (this.datalist.length >= this.total && this.datalist.length !== 0) {
           this.finished = true
         }
       })
@@ -81,13 +89,16 @@ export default {
   },
   mounted () {
     http({
-      url: 'gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=7274781',
+      url: `gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=1&k=7274781`,
       headers: {
         'X-Host': 'mall.film-ticket.film.list'
       }
     }).then(res => {
       // console.log(res.data.data.films)
+
+      // datalist表示我们axios请求回来的全部数据
       this.datalist = res.data.data.films
+      // total表示整个列表一共有多少条数据
       this.total = res.data.data.total
     })
   }

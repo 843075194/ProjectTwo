@@ -1,8 +1,11 @@
 <template>
     <main class="comingsoon">
+      <!-- 用组件van-list来改装的列表数据 -->
+      <!-- ul节点变成了van-list -->
         <van-list v-model="loading" :finished="finished"
           finished-text="总之就是非常可爱" @load="onLoad"
           :immediate-check="false" :offset="200" >
+          <!-- li节点变成了van-cell -->
             <van-cell v-for="data in datalist" :key="data.id" @click="handleClick(data.filmId)">
               <!-- <a :href=" '#/film/'+ data.filmId "> -->
               <a href="javascript:;">
@@ -56,13 +59,22 @@ export default {
   methods: {
     handleClick (id) {
       console.log(id)
+      // 1- 根据路径进行路由的跳转
       this.$router.push(`/detail/${id}`)
+
+      // 2- 根据路由名字进行跳转
+      //   this.$router.push({
+      //     name: 'kerwinDetail',
+      //     params: {
+      //       myid: id
+      //     }
+      //   })
     },
     onLoad () {
       console.log('到底啦')
       this.current++ // 表示每次滑到底部后就加载下一页的数据
       axios({
-        url: `https://m.maizuo.com/gateway?cityId=310100&pageNum=${this.current}&pageSize=10&type=2&k=177673`,
+        url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=2&k=177673`,
         headers: {
           'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1606882441751426003271681","bc":"310100"}',
           'X-Host': 'mall.film-ticket.film.list'
@@ -70,7 +82,7 @@ export default {
       }).then(res => {
         console.log(res.data.data.films)
         this.datalist = [...this.datalist, ...res.data.data.films]
-
+        // 加载状态结束
         this.loading = false
 
         if (this.datalist.length >= this.total) {
@@ -80,6 +92,7 @@ export default {
     }
   },
   mounted () {
+    // Toast表示加载时候给的提示，loading表示在加载中
     Toast.loading({
       message: '变可爱ing...',
       forbidClick: true,
@@ -88,8 +101,9 @@ export default {
       closeOnClickOverlay: true,
       duration: 0
     })
+    // 这里我们用axios进行数据请求，另一个页面我们用封装过的http进行请求
     axios({
-      url: 'https://m.maizuo.com/gateway?cityId=310100&pageNum=1&pageSize=10&type=2&k=177673',
+      url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=2&k=177673`,
       headers: {
         'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1606882441751426003271681","bc":"310100"}',
         'X-Host': 'mall.film-ticket.film.list'
@@ -99,7 +113,7 @@ export default {
       this.datalist = res.data.data.films
       this.total = res.data.data.total
 
-      // 清除弹出提示框
+      // 清除Toast弹出提示框
       Toast.clear()
     })
   }

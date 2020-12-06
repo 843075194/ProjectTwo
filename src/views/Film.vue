@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <div style="height:100px;background:yellow">大型轮播图展示大型轮播图展示大型轮播图展示大型轮播图展示</div> -->
+    <!-- 这一块是film主页的顶部轮播图 -->
     <film-swiper v-if="imglist.length" :myoptions="zidingyi">
       <div class="swiper-slide" v-for="(data,index) in imglist" :key="index">
         <div :style=" {backgroundImage:'url('+data.poster+')'} "
@@ -14,10 +14,10 @@
         <div class="swiper-button-prev"></div>
       </template> -->
     </film-swiper>
-
+    <!-- 这一块是film主页的顶部导航栏 -->
     <film-header style="position:sticky;top:0px;background:white;z-index:100"></film-header>
+    <!-- 空出来给子组件显示的地方 -->
     <router-view></router-view>
-    <!-- 这里是插film子组件的地方 -->
   </div>
 </template>
 

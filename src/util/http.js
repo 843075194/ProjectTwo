@@ -24,7 +24,6 @@ http.interceptors.request.use(function (config) {
     closeOnClickOverlay: true,
     duration: 0
   })
-
   return config
 }, function (error) {
   // Do something with request error

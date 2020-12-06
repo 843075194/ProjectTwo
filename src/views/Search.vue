@@ -1,24 +1,16 @@
 <template>
   <div>
-    <!-- 影院的顶部导航栏 -->
-    <van-nav-bar title="影院" @click-left="onClickLeft()" @click-right="onClickRight()">
-      <template #left style="font-size:13px">
-        <!-- <span class="local">上海</span> -->
-        <!-- 这个地方是根据store里index.js文件里写的state对象来的 -->
-        <!-- 注：这里是store的城市名称 -->
-        <span>{{$store.state.cityName}}</span>
-        <van-icon name="arrow-down" size="5" color="black" style="padding-left:3px"/>
-      </template>
-      <template #right>
-        <van-icon name="search" size="23" color="black"/>
-      </template>
-    </van-nav-bar>
-    <!-- 影院列表 -->
-    <div class="cinema-list-wrap" :style="{height:height}">
+      <van-search
+        v-model="value"
+        show-action
+        placeholder="请输入搜索关键词"
+        @search="onSearch"
+        @cancel="onCancel"
+      />
       <ul class="cinema-list">
         <!-- <li class="cinema-list-item" v-for="data in cinemaList" :key="data.cinemaId" > -->
         <!-- 这个地方最开始是用cinemaList来遍历的，但是现在我们利用vuex里的$store.state.cinemaList来做 -->
-        <li class="cinema-list-item" v-for="data in $store.state.cinemaList" :key="data.cinemaId" >
+        <li class="cinema-list-item" v-for="data in computedCinemaList" :key="data.cinemaId" >
           <a href="javascript:;" class="cinema-item-wrap">
             <div class="cinema-info-lf cinema-info">
             <span class="cinema-name">{{data.name}}</span>
@@ -37,110 +29,59 @@
           </a>
         </li>
       </ul>
-    </div>
   </div>
 </template>
 
 <script>
-// import http from '@/util/http'
 import Vue from 'vue'
-import BetterScroll from 'better-scroll'
-import { NavBar, Icon } from 'vant'
+import { Search, Toast } from 'vant'
 
-Vue.use(NavBar).use(Icon)
-
-Vue.filter('lowPriceFilter', (lowPrice) => {
-  return lowPrice / 100
-})
+Vue.use(Search)
 export default {
-  components: {
-
-  },
   data () {
     return {
-      // cinemaList: [],
-      height: 0
+      value: ''
+    }
+  },
+  computed: {
+    // 因为实际状态下点到查询界面的时候，下面应该是没有数据的
+    // 所以我们要做一个判断，一开始查询的时候不让他有数据
+    computedCinemaList () {
+      if (this.value === '') return [] // 这个地方可以简写掉大括号
+      return this.$store.state.cinemaList
+        .filter(item => item.name.toUpperCase()
+          .includes(this.value.toUpperCase()) ||
+          item.address.toUpperCase().includes(this.value.toUpperCase()))
     }
   },
   mounted () {
-    // 要在这个地方访问到cityName,cityId
-    // 在此之后，在city.vue页面进行记录
-    this.height = document.documentElement.clientHeight - 150 + 'px'
-
-    // 这个地方也就是想表达如果是第一次请求，呢么我们就获取数据,否则我们就用之前请求回来的数据，也就是缓存数据
+    // 这里做完这个判断，也就是说要么点击搜索这里进行请求数据
+    // 要么在上一层city页面进行请求数据，两者一个请求了就可以，另一个界面用缓存数据
     if (this.$store.state.cinemaList.length === 0) {
       // vuex 异步流程
-      this.$store.dispatch('getCinemaList', this.$store.state.cityId) // 对应store里index.js中的actions
-        .then(res => {
-          this.$nextTick(() => {
-            new BetterScroll('.cinema-list-wrap', {
-              scrollbar: {
-                fade: true
-              }
-            })
-          })
-        })
+      this.$store.dispatch('getCinemaList', this.$store.state.cityId)
     } else {
       console.log('缓存')
-      // 因为上面$store.dispatch是为了留下缓存数据，
-      // 所以当不请求数据的时候，我们需要再执行一下这个插件
-      this.$nextTick(() => {
-        new BetterScroll('.cinema-list-wrap', {
-          scrollbar: {
-            fade: true
-          }
-        })
-      })
     }
-
-    // 这个http请求，被放到了Vuex中的index.js中的actions中
-
-    // http({
-    //   url: `gateway?cityId=${this.$store.state.cityId}&ticketFlag=1&k=2991016`,
-    //   headers: {
-    //     'X-Host': 'mall.film-ticket.cinema.list'
-    //   }
-    // }).then(res => {
-    //   console.log(res)
-    //   this.cinemaList = res.data.data.cinemas
-
-    //   // 状态立即更改，但是dom异步渲染
-
-    // this.$nextTick(() => {
-    //   new BetterScroll('.cinema-list-wrap', {
-    //     scrollbar: {
-    //       fade: true
-    //     }
-    //   })
-    // })
-    // })
   },
   methods: {
-    // 左边的City按钮
-    onClickLeft () {
-      console.log('返回')
-      // 这个地方重新提交数据，清除缓存数据
-      this.$store.commit('clearCinemaList')
-      this.$router.push('/city')
+    onSearch (val) {
+      Toast(val)
     },
-    // 右边的搜索按钮
-    onClickRight () {
-      console.log('按钮')
-      this.$router.push('/cinema/search')
+    onCancel () {
+      // Toast('取消')
+      // 这个地方用push , back , replace都可以
+      // push一般适合列表跳详情,
+      // back就是从刚才的界面退回来,
+      // replace就是替换掉刚才的界面
+      this.$router.replace('/cinema')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .cinema-list-wrap{
-    padding-bottom: 49px;
-    z-index: 100;
-    overflow: hidden;
-    position: relative;
-    // 加相对定位是为了修正滚动条的位置
-    // height: 500px;
-    .cinema-list{
+.cinema-list{
       list-style: none;
       padding: 0;
       margin: 0;
@@ -214,8 +155,4 @@ export default {
         }
       }
     }
-  }
-  .local{
-    font-size: 13px;
-  }
 </style>

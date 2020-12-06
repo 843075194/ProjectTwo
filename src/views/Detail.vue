@@ -63,6 +63,8 @@
             </detail-swiper>
         </div>
       </div>
+      <!-- !isPhotos如果是false的话，呢么就执行这个 -->
+      <!-- 这块是点击全部后出来的图片列表 -->
       <div v-else>
         <!-- 这个地方的事件是在Navbar组件点击回退按钮时执行的，上一步isPhotos是true，此时变成了false -->
         <NavBar @navbackEvent='navtoggle' :hide='false'>
@@ -98,17 +100,17 @@ Vue.filter('gradeFilter', (grade) => {
   }
   return grade
 })
-
+// 这个地方封装了一个指令给detail-header用，顶部导航栏
 Vue.directive('top', {
   inserted (el) {
     console.log(el)
     // el.style.display = 'none'
-    el.className = 'film-header'
+    el.className = 'film-header' // 默认样式
     window.onscroll = () => {
       var bodyTop = document.body.scrollTop || document.documentElement.scrollTop
       if (bodyTop > 50) {
         // el.style.display = 'block'
-        el.className = 'film-header show-film-header'
+        el.className = 'film-header show-film-header' // 大于50的时候添加类名show
       } else {
         // el.style.display = 'none'
         el.className = 'film-header'
@@ -140,10 +142,10 @@ export default {
       this.tubiao = !this.tubiao
     },
     goback () {
-      this.$router.back()
+      this.$router.back() // back表示在当前页面返回跳转进来的页面
     },
     navtoggle (data) {
-      console.log(data) // 我是子组件传过来的
+      console.log(data) // data表示 => 我是子组件传过来的
       this.isPhotos = !this.isPhotos
     },
     handlePreview (index) {
@@ -160,6 +162,9 @@ export default {
     // }
   },
   mounted () {
+    // 每当进入详情页的时候，底部导航消失
+    // this.$store.state.isTabbarShow = false
+    this.$store.commit('hide')
     // 现在统一加到http.js里了
     // Toast.loading({
     //   message: '变可爱ing...',
@@ -199,6 +204,10 @@ export default {
       // 清除弹出提示框   现在统一加到http.js里了
       // Toast.clear()
     })
+  },
+  beforeDestroy () {
+    // this.$store.state.isTabbarShow = true
+    this.$store.commit('show')
   }
 }
 </script>

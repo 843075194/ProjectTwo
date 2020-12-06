@@ -36,9 +36,17 @@ const routes = [
     component: Cinema
   },
   {
+    path: '/cinema/search',
+    component: () => import(/* webpackChunkName: "cinemagroup" */ '../views/Search.vue')
+  },
+  {
+    path: '/city',
+    component: () => import(/* webpackChunkName: "citygroup" */ '../views/City.vue')
+  },
+  {
     path: '/detail/:myid',
-    component: Detail,
-    name: 'kerwinDetail'
+    component: Detail
+    // name: 'kerwinDetail'
   },
   {
     path: '/center',
