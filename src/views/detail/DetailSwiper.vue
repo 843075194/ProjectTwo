@@ -32,6 +32,7 @@ export default {
     console.log(this.swiperclass)
     // new Swiper('.swiper-container', {
     new Swiper('.' + this.swiperclass, {
+      // loop: true,
       slidesPerView: this.perslide,
       spaceBetween: this.spacebetween,
       freeMode: true

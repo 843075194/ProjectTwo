@@ -54,7 +54,7 @@
               <!-- isPhotos在这个地方变成了true，所以上面的div执行if语句被隐藏，下面的div执行v-else语句显示 -->
               <span class="photos-to-all" @click='isPhotos=true'>全部({{filminfo.photos.length}})</span>
             </div>
-            <detail-swiper :perslide="2" :spacebetween='20' class="photos-detail-swiper" swiperclass='photos-detail-swiper'>
+            <detail-swiper :perslide="2" :spacebetween='0' class="photos-detail-swiper" swiperclass='photos-detail-swiper'>
               <div class="swiper-slide swiper-photos" v-for="(data,index) in filminfo.photos" :key="index">
                     <div class="lazy-img-wrapphotos" @click = 'handlePreview(index)'>
                       <img :src="data" alt=""/>
@@ -390,12 +390,12 @@ export default {
         width: 100%;
       }
     }
-    .swiper-actors{
-      width: 100px !important;
-    }
-    .swiper-photos{
-      width: 150px !important;
-    }
+    // .swiper-actors{
+    //   width: 100px !important;
+    // }
+    // .swiper-photos{
+    //   width: 150px !important;
+    // }
     .photos-title-bar{
       height: 62px;
       width: 100%;
@@ -417,9 +417,9 @@ export default {
           padding: 15px;
       }
     }
-    .photos-detail-swiper{
-      height: 120px!important;
-    }
+    // .photos-detail-swiper{
+    //   height: 120px!important;
+    // }
     .photos{
       margin-bottom: 60px;
     }

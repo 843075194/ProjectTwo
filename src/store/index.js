@@ -10,29 +10,28 @@ export default new Vuex.Store({
     cityId: '310100',
     cityName: '上海',
     isTabbarShow: true,
-
     cinemaList: []
   },
   // 集中式修改状态 ,提供监控的功能，配合浏览器的vue小插件来看
   mutations: {
     // 从City.vue中handeleChangePage方法来调用的这个函数
-    changeCityName (state, name) {
+    changeCityName (state, name) { // 在city.vue中调用
       state.cityName = name
     },
-    changeCityId (state, cityId) {
+    changeCityId (state, cityId) { // 在city.vue中调用
       state.cityId = cityId
     },
     hide (state) { // 在Detail.vue中调用
-      state.isTabbarShow = false
+      state.isTabbarShow = false // 控制App.vue中底部导航栏是否显示
     },
     show (state) {
       state.isTabbarShow = true
     },
-    setCinemaList (state, cinemaList) {
+    setCinemaList (state, cinemas) {
       // state.cinemaList表示上面我们定义的state里面的cinemaList数组
       // 注：这个地方与Cinema.vue中this.cinemaList = res.data.data.cinemas类似
       //    只不过是分成了两步，先在actions里调用，然后在这里赋值
-      state.cinemaList = cinemaList
+      state.cinemaList = cinemas
     },
     // 注：clearCinemaList
     // 这个方法是为了当我们加载其他城市数据的时候，
@@ -46,7 +45,7 @@ export default new Vuex.Store({
   },
   // 专门处理异步操作的
   actions: {
-    getCinemaList (store, cityId) {
+    getCinemaList (store, cityId) { // 对应cinema.vue , 请求影院城市信息
       return http({
         url: `gateway?cityId=${cityId}&ticketFlag=1&k=2991016`,
         headers: {

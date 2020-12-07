@@ -99,7 +99,7 @@ export default {
       console.log(index)
       Toast(index)
     },
-    handeleChangePage (name, cityId) {
+    handeleChangePage (name, cityId) { // 点击每一个城市的时候
       // 这个地方是城市的详情列表，返回的时候
       // 要在这个时候把cityId金额和cotyName名称记录下来
       // 在cinema.vue页面进行访问

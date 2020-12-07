@@ -88,6 +88,7 @@ export default {
     }
   },
   mounted () {
+    // 一开始就要请求一次数据
     http({
       url: `gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=1&k=7274781`,
       headers: {

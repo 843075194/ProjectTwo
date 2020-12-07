@@ -52,6 +52,7 @@ Vue.use(NavBar).use(Icon)
 Vue.filter('lowPriceFilter', (lowPrice) => {
   return lowPrice / 100
 })
+
 export default {
   components: {
 
@@ -69,7 +70,7 @@ export default {
 
     // 这个地方也就是想表达如果是第一次请求，呢么我们就获取数据,否则我们就用之前请求回来的数据，也就是缓存数据
     if (this.$store.state.cinemaList.length === 0) {
-      // vuex 异步流程
+      // vuex 异步流程  dispatch 发送
       this.$store.dispatch('getCinemaList', this.$store.state.cityId) // 对应store里index.js中的actions
         .then(res => {
           this.$nextTick(() => {
