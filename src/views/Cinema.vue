@@ -6,19 +6,34 @@
         <!-- <span class="local">上海</span> -->
         <!-- 这个地方是根据store里index.js文件里写的state对象来的 -->
         <!-- 注：这里是store的城市名称 -->
-        <span>{{$store.state.cityName}}</span>
+        <!-- <span>{{$store.state.cityName}}</span> -->
+        <span>{{cityName}}</span>
         <van-icon name="arrow-down" size="5" color="black" style="padding-left:3px"/>
       </template>
       <template #right>
         <van-icon name="search" size="23" color="black"/>
       </template>
     </van-nav-bar>
+    <!-- 第二个导航栏 -->
+    <div class="operate">
+     <van-dropdown-menu>
+        <van-dropdown-item v-model='cityQuId' :options="cityList" />
+      </van-dropdown-menu>
+       <van-dropdown-menu>
+        <van-dropdown-item v-model='appId' :options="appList" />
+      </van-dropdown-menu>
+       <van-dropdown-menu>
+        <van-dropdown-item v-model='whereId' :options="whereList" />
+      </van-dropdown-menu>
+    </div>
     <!-- 影院列表 -->
     <div class="cinema-list-wrap" :style="{height:height}">
       <ul class="cinema-list">
         <!-- <li class="cinema-list-item" v-for="data in cinemaList" :key="data.cinemaId" > -->
         <!-- 这个地方最开始是用cinemaList来遍历的，但是现在我们利用vuex里的$store.state.cinemaList来做 -->
-        <li class="cinema-list-item" v-for="data in $store.state.cinemaList" :key="data.cinemaId" >
+        <!-- <li class="cinema-list-item" v-for="data in $store.state.cinemaList" :key="data.cinemaId" > -->
+          <!-- 现在通过vuex-modules来修改--对应...mapState('CinemaModule', ['cinemaList']) -->
+        <li class="cinema-list-item" v-for="data in cinemaListGetByDistrictName" :key="data.cinemaId" >
           <a href="javascript:;" class="cinema-item-wrap">
             <div class="cinema-info-lf cinema-info">
             <span class="cinema-name">{{data.name}}</span>
@@ -45,9 +60,10 @@
 // import http from '@/util/http'
 import Vue from 'vue'
 import BetterScroll from 'better-scroll'
-import { NavBar, Icon } from 'vant'
+import { NavBar, Icon, DropdownMenu, DropdownItem } from 'vant'
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 
-Vue.use(NavBar).use(Icon)
+Vue.use(NavBar).use(Icon).use(DropdownItem).use(DropdownMenu)
 
 Vue.filter('lowPriceFilter', (lowPrice) => {
   return lowPrice / 100
@@ -63,15 +79,45 @@ export default {
       height: 0
     }
   },
+  computed: {
+    ...mapState('CinemaModule', ['cinemaList', 'cityList', 'appList', 'whereList']),
+    ...mapState('CityModule', ['cityId', 'cityName']),
+    ...mapGetters('CinemaModule', ['cinemaListGetByDistrictName']),
+    cityQuId: {
+      get () {
+        // console.log(this.$store.state.CinemaModule)
+        return this.$store.state.CinemaModule.cityQuId
+      },
+      set (value) {
+        this.$store.state.CinemaModule.cityQuId = value
+      }
+    },
+    appId: {
+      get () {
+        return this.$store.state.CinemaModule.appId
+      },
+      set (value) {
+        this.$store.state.CinemaModule.appId = value
+      }
+    },
+    whereId: {
+      get () {
+        return this.$store.state.CinemaModule.whereId
+      },
+      set (value) {
+        this.$store.state.CinemaModule.whereId = value
+      }
+    }
+  },
   mounted () {
     // 要在这个地方访问到cityName,cityId
     // 在此之后，在city.vue页面进行记录
-    this.height = document.documentElement.clientHeight - 150 + 'px'
+    this.height = document.documentElement.clientHeight - 200 + 'px'
 
     // 这个地方也就是想表达如果是第一次请求，呢么我们就获取数据,否则我们就用之前请求回来的数据，也就是缓存数据
-    if (this.$store.state.cinemaList.length === 0) {
+    if (this.cinemaList.length === 0) {
       // vuex 异步流程  dispatch 发送
-      this.$store.dispatch('getCinemaList', this.$store.state.cityId) // 对应store里index.js中的actions
+      this.getCinemaList(this.cityId) // 对应store里index.js中的actions
         .then(res => {
           this.$nextTick(() => {
             new BetterScroll('.cinema-list-wrap', {
@@ -93,35 +139,17 @@ export default {
         })
       })
     }
-
-    // 这个http请求，被放到了Vuex中的index.js中的actions中
-
-    // http({
-    //   url: `gateway?cityId=${this.$store.state.cityId}&ticketFlag=1&k=2991016`,
-    //   headers: {
-    //     'X-Host': 'mall.film-ticket.cinema.list'
-    //   }
-    // }).then(res => {
-    //   console.log(res)
-    //   this.cinemaList = res.data.data.cinemas
-
-    //   // 状态立即更改，但是dom异步渲染
-
-    // this.$nextTick(() => {
-    //   new BetterScroll('.cinema-list-wrap', {
-    //     scrollbar: {
-    //       fade: true
-    //     }
-    //   })
-    // })
-    // })
   },
   methods: {
+    ...mapMutations('CinemaModule', ['clearCinemaList', 'clearCityList']),
+    ...mapActions('CinemaModule', ['getCinemaList']),
     // 左边的City按钮
     onClickLeft () {
       console.log('返回')
       // 这个地方重新提交数据，清除缓存数据
-      this.$store.commit('clearCinemaList')
+      // this.$store.commit('clearCinemaList')
+      this.clearCityList()
+      this.clearCinemaList()
       this.$router.push('/city')
     },
     // 右边的搜索按钮
@@ -218,5 +246,13 @@ export default {
   }
   .local{
     font-size: 13px;
+  }
+.operate {
+    display: flex;
+    position: relative;
+    z-index: 255;
+    .van-dropdown-menu {
+      flex: 1;
+    }
   }
 </style>

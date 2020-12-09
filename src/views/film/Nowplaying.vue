@@ -39,6 +39,7 @@
 import Vue from 'vue'
 import http from '@/util/http' // 这个函数是我们封装了axios之后的
 import { List, Cell } from 'vant'
+import { mapState } from 'vuex'
 Vue.use(List).use(Cell) // 链式引入
 
 Vue.filter('actorFilter', (actors) => {
@@ -57,6 +58,9 @@ export default {
       total: 0 // 总数据长度
     }
   },
+  computed: {
+    ...mapState('CityModule', ['cityId'])
+  },
   methods: {
     handleClick (filmId) {
       // console.log(filmId)
@@ -68,7 +72,7 @@ export default {
       this.current++ // 表示每次滑到底部后就加载下一页的数据
 
       http({
-        url: `gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=7274781`,
+        url: `gateway?cityId=${this.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=7274781`,
         headers: {
           'X-Host': 'mall.film-ticket.film.list'
         }
@@ -90,7 +94,7 @@ export default {
   mounted () {
     // 一开始就要请求一次数据
     http({
-      url: `gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=1&k=7274781`,
+      url: `gateway?cityId=${this.cityId}&pageNum=1&pageSize=10&type=1&k=7274781`,
       headers: {
         'X-Host': 'mall.film-ticket.film.list'
       }

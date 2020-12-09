@@ -20,6 +20,7 @@
 import Vue from 'vue'
 import { IndexBar, IndexAnchor, Toast } from 'vant'
 import http from '@/util/http'
+import { mapMutations } from 'vuex'
 
 Vue.use(IndexBar)
 Vue.use(IndexAnchor).use(Toast)
@@ -62,6 +63,7 @@ export default {
     })
   },
   methods: {
+    ...mapMutations('CityModule', ['changeCityName', 'changeCityId']),
     // 这里的形参cities
     // 就是指代的上面的实参res.data.data.cities
     // 这个函数主要是为了将请求数据转化成我们想要的数据格式
@@ -82,6 +84,7 @@ export default {
       letterArr.forEach((data) => {
         // cities是我们请求回来的大数组数据，进行过滤
         const list = cities.filter((item) => item.pinyin.substring(0, 1).toUpperCase() === data)
+        // 这个地方判断是为了过滤掉没有的字母开头，比如：字母O，下面就没有城市
         if (list.length > 0) {
           newCities.push({
             type: data,
@@ -104,8 +107,11 @@ export default {
       // 要在这个时候把cityId金额和cotyName名称记录下来
       // 在cinema.vue页面进行访问
       // this.$store.state.cityName = name // 在点击的时候把store的值给改了，也就是把全局的改了
-      this.$store.commit('changeCityName', name)
-      this.$store.commit('changeCityId', cityId)
+
+      // this.$store.commit('changeCityName', name)
+      // this.$store.commit('changeCityId', cityId)
+      this.changeCityName(name)
+      this.changeCityId(cityId)
       this.$router.back()
     }
   }

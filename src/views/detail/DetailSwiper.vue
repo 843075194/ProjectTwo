@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container" :class="swiperclass">
+    <div class="swiper-container" :class="swiperclass">
         <div class="swiper-wrapper">
           <slot></slot>
         </div>

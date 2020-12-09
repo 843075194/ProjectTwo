@@ -90,6 +90,7 @@ import detailSwiper from './detail/DetailSwiper'
 import detailHeader from './detail/DetailHeader'
 import NavBar from '../components/Navbar'
 import { ImagePreview } from 'vant'
+import { mapMutations } from 'vuex'
 
 Vue.filter('dateFilter', (date) => {
   return moment(date * 1000).format('YYYY-MM-DD')
@@ -137,6 +138,9 @@ export default {
     NavBar
   },
   methods: {
+    // vuex-module模块使用
+    ...mapMutations('TabbarModule', ['show', 'hide']),
+    // 相当于 ...{show(){},hide(){}}
     toggle: function () {
       this.isTrue = !this.isTrue
       this.tubiao = !this.tubiao
@@ -163,8 +167,13 @@ export default {
   },
   mounted () {
     // 每当进入详情页的时候，底部导航消失
+    // 第一种方法：
     // this.$store.state.isTabbarShow = false
-    this.$store.commit('hide')
+    // 第二种方法：
+    // this.$store.commit('hide')
+    // 第三种方法：
+    this.hide()
+
     // 现在统一加到http.js里了
     // Toast.loading({
     //   message: '变可爱ing...',
@@ -207,7 +216,8 @@ export default {
   },
   beforeDestroy () {
     // this.$store.state.isTabbarShow = true
-    this.$store.commit('show')
+    // this.$store.commit('show')
+    this.show()
   }
 }
 </script>

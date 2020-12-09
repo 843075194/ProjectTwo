@@ -7,7 +7,14 @@
         @search="onSearch"
         @cancel="onCancel"
       />
-      <ul class="cinema-list">
+      <div v-if="!value">
+        <span>离我最近</span>
+        <ul class="s-closed-list">
+          <li v-for="item in this.cinemaListGetFive" :key="item.cinemaId">{{item.name}}</li>
+        </ul>
+        </div>
+      <div v-else>
+        <ul class="cinema-list">
         <!-- <li class="cinema-list-item" v-for="data in cinemaList" :key="data.cinemaId" > -->
         <!-- 这个地方最开始是用cinemaList来遍历的，但是现在我们利用vuex里的$store.state.cinemaList来做 -->
         <li class="cinema-list-item" v-for="data in computedCinemaList" :key="data.cinemaId" >
@@ -29,12 +36,15 @@
           </a>
         </li>
       </ul>
+      </div>
+
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { Search, Toast } from 'vant'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 Vue.use(Search)
 export default {
@@ -44,27 +54,30 @@ export default {
     }
   },
   computed: {
+    ...mapState('CinemaModule', ['cinemaList']),
+    ...mapState('CityModule', ['cityId']),
+    ...mapGetters('CinemaModule', ['cinemaListGetFive']),
     // 因为实际状态下点到查询界面的时候，下面应该是没有数据的
     // 所以我们要做一个判断，一开始查询的时候不让他有数据
     computedCinemaList () {
       if (this.value === '') return [] // 这个地方可以简写掉大括号
-      return this.$store.state.cinemaList
-        .filter(item => item.name.toUpperCase()
-          .includes(this.value.toUpperCase()) ||
+      return this.cinemaList.filter(item => item.name.toUpperCase()
+        .includes(this.value.toUpperCase()) ||
           item.address.toUpperCase().includes(this.value.toUpperCase()))
     }
   },
   mounted () {
     // 这里做完这个判断，也就是说要么点击搜索这里进行请求数据
     // 要么在上一层city页面进行请求数据，两者一个请求了就可以，另一个界面用缓存数据
-    if (this.$store.state.cinemaList.length === 0) {
+    if (this.cinemaList.length === 0) {
       // vuex 异步流程
-      this.$store.dispatch('getCinemaList', this.$store.state.cityId)
+      this.getCinemaList(this.cityId)
     } else {
       console.log('缓存')
     }
   },
   methods: {
+    ...mapActions('CinemaModule', ['getCinemaList']),
     onSearch (val) {
       Toast(val)
     },

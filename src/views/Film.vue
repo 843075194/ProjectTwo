@@ -16,7 +16,7 @@
     </film-swiper>
     <!-- 这一块是film主页的顶部导航栏 -->
     <film-header style="position:sticky;top:0px;background:white;z-index:100"></film-header>
-    <!-- 空出来给子组件显示的地方 -->
+    <!-- 空出来给子组件显示的地方，也就是两列长list列表数据 -->
     <router-view></router-view>
   </div>
 </template>

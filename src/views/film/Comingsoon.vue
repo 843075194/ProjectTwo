@@ -38,6 +38,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 import { List, Cell, Toast } from 'vant'
+import { mapState } from 'vuex'
 Vue.use(List).use(Cell) // 链式引入
 
 Vue.filter('actorFilter', (actors) => {
@@ -55,6 +56,9 @@ export default {
       current: 1,
       total: 0 // 总数据长度
     }
+  },
+  computed: {
+    ...mapState('CityModule', ['cityId'])
   },
   methods: {
     handleClick (id) {
@@ -74,13 +78,14 @@ export default {
       console.log('到底啦')
       this.current++ // 表示每次滑到底部后就加载下一页的数据
       axios({
-        url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=2&k=177673`,
+        url: `https://m.maizuo.com/gateway?cityId=${this.cityId}&pageNum=${this.current}&pageSize=10&type=2&k=177673`,
         headers: {
           'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1606882441751426003271681","bc":"310100"}',
           'X-Host': 'mall.film-ticket.film.list'
         }
       }).then(res => {
         console.log(res.data.data.films)
+
         this.datalist = [...this.datalist, ...res.data.data.films]
         // 加载状态结束
         this.loading = false
@@ -103,7 +108,7 @@ export default {
     })
     // 这里我们用axios进行数据请求，另一个页面我们用封装过的http进行请求
     axios({
-      url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=2&k=177673`,
+      url: `https://m.maizuo.com/gateway?cityId=${this.cityId}&pageNum=1&pageSize=10&type=2&k=177673`,
       headers: {
         'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1606882441751426003271681","bc":"310100"}',
         'X-Host': 'mall.film-ticket.film.list'
